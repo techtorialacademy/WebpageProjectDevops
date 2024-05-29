@@ -1,6 +1,8 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Techtorial Academy - Server Details</title>
     <style>
         body {
@@ -44,38 +46,57 @@
         button:hover {
             background-color: #45a049;
         }
-
     </style>
     <script>
+        // Function to fetch and display the IPs
+        async function fetchAndDisplayIPs() {
+            try {
+                // Fetch the instance metadata for private IP
+                const privateIPResponse = await fetch('http://169.254.169.254/latest/meta-data/local-ipv4');
+                const privateIP = await privateIPResponse.text();
+                
+                // Fetch the instance metadata for public IP
+                const publicIPResponse = await fetch('http://169.254.169.254/latest/meta-data/public-ipv4');
+                const publicIP = await publicIPResponse.text();
+                
+                // Set the IPs in the HTML elements
+                document.getElementById("privateIP").innerText = privateIP;
+                document.getElementById("publicIP").innerText = publicIP;
+            } catch (error) {
+                console.error('Error fetching IP addresses:', error);
+                document.getElementById("privateIP").innerText = "Error fetching private IP";
+                document.getElementById("publicIP").innerText = "Error fetching public IP";
+            }
+        }
+
+        // Function to display server details
         function displayServerDetails() {
             let uptime = Math.floor(Math.random() * 24) + " hours";
             let memoryUsage = Math.floor(Math.random() * 100) + "%";
             document.getElementById("uptime").innerHTML = "Server Uptime: " + uptime;
             document.getElementById("memory").innerHTML = "Memory Usage: " + memoryUsage;
         }
+
+        // Set the current date and time
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("datetime").innerText = new Date().toLocaleString();
+
+            // Fetch and display IPs
+            fetchAndDisplayIPs();
+        });
     </script>
 </head>
-
 <body>
     <div class="header">
         <img src="logo.png" alt="Techtorial Academy Logo" class="logo">
         <h1>Welcome to Techtorial Academy's Server</h1>
     </div>
-    <p>This server is set up and managed by DevOps Team at Techtorial Academy.</p>
+    <p>This server is set up and managed by the DevOps Team at Techtorial Academy.</p>
     <p>Instance created on: <b id="datetime"></b></p>
-    <p>Private IP: <b id="privateIP"></b></p>
-    <p>Public IP: <b id="publicIP"></b></p>
+    <p>Private IP: <b id="privateIP">Fetching...</b></p>
+    <p>Public IP: <b id="publicIP">Fetching...</b></p>
     <button onclick="displayServerDetails()">Check Server Details</button>
     <p id="uptime"></p>
     <p id="memory"></p>
 </body>
-<script>
-    // Set the current date and time
-    document.getElementById("datetime").innerText = new Date().toLocaleString();
-
-    // Set the IPs (You can replace these with actual logic to fetch the IPs if needed)
-    document.getElementById("privateIP").innerText = "192.168.1.1";
-    document.getElementById("publicIP").innerText = "203.0.113.10";
-</script>
-
 </html>
